@@ -70,7 +70,7 @@ public class Sunflower {
 	}
 	
 	public static String getDescription() {
-		return "[S]unflower: Cost: " + Sunflower.COST + " suncoins, Damage: 0, Enduramce: " + Sunflower.MAX_RESISTANCE;
+		return Messages.SUNFLOWER_DESCRIPTION.formatted(COST, 0, MAX_RESISTANCE);
 	}
 	
 	public String getIcon() {

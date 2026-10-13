@@ -96,7 +96,7 @@ public class GamePrinter implements GameView {
 	@Override
 	public void showEndMessage() {
 		StringBuilder buffer = new StringBuilder(Messages.GAME_OVER);
-		buffer.append(System.lineSeparator());
+		buffer.append(NEW_LINE);
 		if (game.playerQuits()) {
 	    	buffer.append(Messages.PLAYER_QUITS);
 		}

@@ -69,7 +69,7 @@ public class Peashooter {
 	}
 	
 	public static String getDescription() {
-		return "[P]eashooter: Cost: " + Peashooter.COST + " suncoins, damage: " + Peashooter.DAMAGE + ", endurance: " + Peashooter.MAX_RESISTANCE;
+		return Messages.PEASHOOTER_DESCRIPTION.formatted(COST, DAMAGE, MAX_RESISTANCE);
 	}
 	
 	public String getIcon() {

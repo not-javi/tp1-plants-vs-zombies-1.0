@@ -2,7 +2,6 @@ package pvz.logic;
 
 import java.util.Random;
 import pvz.control.Level;
-import pvz.logic.gameobjects.Zombie;
 import pvz.logic.gameobjects.ZombieList;
 import utils.Position;
 
@@ -59,7 +58,7 @@ public class ZombiesManager {
 	}
 
 	public boolean addZombie(int row) {
-		Position aux = new Position(row, Game.NUM_COLS - 1);
+		Position aux = new Position(row, Game.NUM_COLS);
 		boolean canAdd = getRemainingZombies() > 0 && shouldAddZombie() && isPositionEmpty(aux);
 		if(canAdd) {
 			remainingZombies--;
