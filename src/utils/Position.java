@@ -1,9 +1,9 @@
 package utils;
 
+import java.util.Objects;
+
 public class Position {
 	
-	public static final int NUM_ROWS = 4;
-	public static final int NUM_COLS = 8;
 	private int row;
 	private int col;
 	
@@ -19,36 +19,36 @@ public class Position {
 	
 	public Position left() {
 		Position pos = new Position(this.row, this.col - 1);
-		if (pos.inBoard()) {
-			return pos;
-		}
-		return null;
+		return pos;
 	}
 	
 	public Position right() {
 		Position pos = new Position(this.row, this.col + 1);
-		if (pos.inBoard()) {
-			return pos;
-		}
-		return null;
+		return pos;
 	}
 
-	public boolean inBoard() {
-		return ( 0 <= this.col && this.col < NUM_COLS && 0 <= this.row && this.row < NUM_ROWS);
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Position other = (Position) obj;
+		return col == other.col && row == other.row;
 	}
-	
-	public boolean equals(Position pos) {
-		return (this.row == pos.row && this.col == pos.col);
-	}
-	
+
 	public String positionToString() {
 	    return "(" + this.col + ", " + this.row + ")";
 	}
 	
+	public boolean isInCol(int col) {
+		return this.col ==col;
+	}
 	
-	
-	
-	
-	
+	public boolean isInside(int maxCols, int maxRows) {
+		return this.col >= 0 && this.col < maxCols && this.row >= 0 && this.row < maxRows;
+	}
 }
 	

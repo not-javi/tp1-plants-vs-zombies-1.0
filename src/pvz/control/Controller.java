@@ -1,10 +1,11 @@
 package pvz.control;
 
-import pvz.logic.Game;
+import pvz.logic.GameModel;
+import pvz.logic.GameStatus;
 import pvz.view.GamePrinter;
 import pvz.view.GameView;
 import pvz.view.Messages;
-import utils.Position;
+import pvz.control.command.Command;
 
 /**
  * Input/output coordinator of the game (the C in MVC).
@@ -17,12 +18,14 @@ import utils.Position;
  */
 public class Controller {
 
-	private final Game game;
+	private final GameModel gameModel;
+	private final GameStatus gameStatus;
 	private final GameView view;
 
-	public Controller(Game game) {
-		this.game = game;
-		this.view = new GamePrinter(game);
+	public Controller(GameModel gameModel, GameStatus gameStatus) {
+		this.gameModel = gameModel;
+		this.gameStatus = gameStatus;
+		this.view = new GamePrinter(gameStatus);
 	}
 
 	/**
@@ -30,87 +33,21 @@ public class Controller {
 	 */
 	public void run() {
 		view.showGame();
-		while (!game.hasGameFinished()) {
+		while (!gameStatus.hasGameFinished() && !gameStatus.playerQuits()) {
 			String words[] = view.getPrompt();
-			executeCommand(words);
+			Command command = Command.parse(words);
+			if (command != null) {
+				command.execute(gameModel, view);
+			} 
+			else {
+				view.showError(Messages.UNKNOWN_COMMAND);
+			}
+			
 		}
 		view.showEndMessage();
-
 	}
 	
-	public void executeCommand(String[] words) {
-		switch (words[0]) {
-		case Messages.ADD:
-		case Messages.SHORT_ADD:
-			executeAddCommand(words);
-			break;
-			
-		case Messages._LIST:
-		case Messages.SHORT_LIST:
-			view.showMessage(game.getPlantsList());
-			break;
-			
-		case Messages.RESET:
-		case Messages.SHORT_RESET:
-			game.reset();
-			view.showGame();
-			break;
-			
-		case Messages._HELP:
-		case Messages.SHORT_HELP:
-			for (int i = 0; i < Messages.HELP_LINES.length; i++) {
-			view.showMessage(Messages.HELP_LINES[i]);
-			}
-			break;
-			
-		case Messages.EXIT:
-		case Messages.SHORT_EXIT:
-			game.quit();
-			view.showEndMessage();
-			break;
-			
-		case Messages.NONE:
-		case Messages.SHORT_NONE:
-		case Messages.NO_STRING:
-			game.update();
-			view.showGame();
-			break;
-		
-		default:
-			view.showError(Messages.UNKNOWN_COMMAND);
-			break;
-		}
-	}
 	
-	private void executeAddCommand(String[] words) {
-		if (words.length != 4) {
-			view.showError(Messages.COMMAND_PARAMETERS_MISSING);
-			return;
-		}
-		try {
-			String plantName = words[1];
-			int col = Integer.parseInt(words[2]);
-			int row = Integer.parseInt(words[3]);
-			Position pos = new Position(row,col);
-			 switch (game.addGameObject(plantName, pos)) {
-			 case 0:
-				 game.update();
-				 view.showGame();
-				 break;
-			 case 1:
-				 view.showError(Messages.INVALID_POSITION);
-				 break;
-			 case 2:
-				 view.showError(Messages.NOT_ENOUGH_COINS);
-				 break;
-			 case 3:
-				 view.showError(Messages.INVALID_GAME_OBJECT);
-				 break;
-			 }
-		} catch (NumberFormatException nfe) {
-			view.showError(Messages.INVALID_POSITION);
-		}
-	}
 	
 	
 	

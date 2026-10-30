@@ -6,6 +6,8 @@ import static pvz.view.Messages.error;
 import static utils.StringUtils.*;
 
 import pvz.logic.Game;
+import pvz.logic.GameWorld;
+import pvz.logic.GameStatus;
 import utils.Position;
 import utils.StringUtils;
 
@@ -14,19 +16,21 @@ import java.util.Scanner;
 /**
  * View component of the game (the V in MVC).
  *
- * <p>Renders the current game state as a formatted string: a status header
- * (cycle count, sun coins, remaining zombies) followed by the ASCII board grid.
- * Also produces the end-of-game message distinguishing player win, player quit,
- * and zombie win outcomes.
+ * <p>
+ * Renders the current game state as a formatted string: a status header (cycle
+ * count, sun coins, remaining zombies) followed by the ASCII board grid. Also
+ * produces the end-of-game message distinguishing player win, player quit, and
+ * zombie win outcomes.
  *
- * <p>This class is read-only with respect to {@link Game}: it queries game state
+ * <p>
+ * This class is read-only with respect to {@link Game}: it queries game state
  * through the public API and never modifies it. All string literals and format
  * templates are sourced from {@link Messages}.
  */
 public class GamePrinter implements GameView {
 
 	private static final String SPACE = " ";
-	
+
 	private static final String CELL_BORDER_CHAR = "─";
 
 	private static final String VERTICAL_DELIMITER = "|";
@@ -34,10 +38,10 @@ public class GamePrinter implements GameView {
 	private static final String NEW_LINE = System.lineSeparator();
 
 	private static final int MARGIN_SIZE = 2;
-	
+
 	private static final String MARGIN = repeat(SPACE, MARGIN_SIZE);
 
-	private static final int CELL_SIZE = 8;
+	private static final int CELL_SIZE = 12;
 
 	private static final String CELL_BORDER = repeat(CELL_BORDER_CHAR, CELL_SIZE);
 
@@ -45,16 +49,17 @@ public class GamePrinter implements GameView {
 
 	private static final String INDENTED_ROW_BORDER = String.format("%n%s%s%n", MARGIN, ROW_BORDER);
 
-	private Game game;
+	private GameStatus game;
 	private Scanner scanner;
 
-	public GamePrinter(Game game) {
+	public GamePrinter(GameStatus game) {
 		this.game = game;
 		this.scanner = new Scanner(System.in);
 	}
 
 	/**
-	 * Builds a string that represent the game status: cycles, suncoins, remaining zombies.
+	 * Builds a string that represent the game status: cycles, suncoins, remaining
+	 * zombies.
 	 * 
 	 * @return the string that represents the game status.
 	 */
@@ -79,10 +84,11 @@ public class GamePrinter implements GameView {
 		// Paint game board
 		str.append(INDENTED_ROW_BORDER);
 
-		for (int row = 0; row < Game.NUM_ROWS; row++) {
+		for (int row = 0; row < GameWorld.NUM_ROWS; row++) {
 			str.append(MARGIN).append(VERTICAL_DELIMITER);
-			for (int col = 0; col < Game.NUM_COLS; col++) {
-				str.append(StringUtils.centre(game.positionToString(new Position(row, col)), CELL_SIZE)).append(VERTICAL_DELIMITER);
+			for (int col = 0; col < GameWorld.NUM_COLS; col++) {
+				str.append(StringUtils.centre(game.positionToString(new Position(row, col)), CELL_SIZE))
+						.append(VERTICAL_DELIMITER);
 			}
 			str.append(INDENTED_ROW_BORDER);
 		}
@@ -97,15 +103,12 @@ public class GamePrinter implements GameView {
 	public void showEndMessage() {
 		StringBuilder buffer = new StringBuilder(Messages.GAME_OVER);
 		buffer.append(NEW_LINE);
-		if (game.playerQuits()) {
-	    	buffer.append(Messages.PLAYER_QUITS);
-		}
-		else if (game.isZombiesWinner()) {
+		if (game.playerQuits())
+			buffer.append(Messages.PLAYER_QUITS);
+		else if (game.isZombiesWinner())
 			buffer.append(Messages.ZOMBIES_WIN);
-	    }
-		else if (game.isPlayerWinner()) {
-	        buffer.append(Messages.PLAYER_WINS);
-	    }
+		else if (game.isPlayerWinner())
+			buffer.append(Messages.PLAYER_WINS);
 		System.out.println(buffer);
 	}
 

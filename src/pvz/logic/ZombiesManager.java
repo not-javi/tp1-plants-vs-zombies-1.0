@@ -2,13 +2,14 @@ package pvz.logic;
 
 import java.util.Random;
 import pvz.control.Level;
-import pvz.logic.gameobjects.ZombieList;
 import utils.Position;
+import pvz.logic.factories.ZombieFactory;
 
 /**
  * Manages the full lifecycle of zombies for a game session.
  *
- * <p>Responsibilities: deciding each cycle whether to spawn a new zombie
+ * <p>
+ * Responsibilities: deciding each cycle whether to spawn a new zombie
  * (probabilistically, subject to the remaining quota from {@link Level}),
  * delegating per-cycle updates and dead-removal to the underlying
  * {@link ZombieList}, and answering win/loss queries
@@ -16,7 +17,9 @@ import utils.Position;
  */
 public class ZombiesManager {
 
-	private Game game;
+	private GameWorld game;
+	
+	
 
 	private Level level;
 
@@ -24,14 +27,14 @@ public class ZombiesManager {
 
 	private int remainingZombies;
 
-	private ZombieList zombies;
+	private int zombiesAlive;
 
-	public ZombiesManager(Game game, Level level, Random rand) {
+	public ZombiesManager(GameWorld game, Level level, Random rand) {
 		this.game = game;
 		this.level = level;
 		this.rand = rand;
+		zombiesAlive = 0;
 		remainingZombies = level.getNumberOfZombies();
-		zombies = new ZombieList();
 	}
 
 	/**
@@ -42,7 +45,7 @@ public class ZombiesManager {
 	private boolean shouldAddZombie() {
 		return rand.nextDouble() < level.getZombieFrequency();
 	}
-	
+
 	/**
 	 * Return a random row within the board limits.
 	 * 
@@ -51,7 +54,7 @@ public class ZombiesManager {
 	private int randomZombieRow() {
 		return rand.nextInt(Game.NUM_ROWS);
 	}
-	
+
 	public boolean addZombie() {
 		int row = randomZombieRow();
 		return addZombie(row);
@@ -59,59 +62,31 @@ public class ZombiesManager {
 
 	public boolean addZombie(int row) {
 		Position aux = new Position(row, Game.NUM_COLS);
-		boolean canAdd = getRemainingZombies() > 0 && shouldAddZombie() && isPositionEmpty(aux);
-		if(canAdd) {
+		boolean canAdd = shouldAddZombie() && getRemainingZombies() > 0 && game.isEmpty(aux);
+		if (canAdd) {
 			remainingZombies--;
-			zombies.addZombie(aux, game);
+			game.addGameObject(ZombieFactory.spawnRandomZombie(game, aux, rand));
 		}
 		return canAdd;
 	}
-	
+
 	public int getRemainingZombies() {
 		return remainingZombies;
 	}
-	
-	public boolean isPositionEmpty(Position pos) {
-		return zombies.isPositionEmpty(pos);
-	}
-	
-	public void attackZombie(Position pos, int damage) {
-		zombies.attackZombie(pos, damage);
-	}
-	
-	public boolean update() {
-		if (zombies.update()) return true;
+
+	public void update() {
 		addZombie();
-		return false;
 	}
-	
-	public String getZombieIconInPosition(Position pos) {
-		return zombies.getZombieIconInPosition(pos);
-	}
-	
+
 	public boolean areAllZombiesDead() {
-	    return zombies.noZombiesOnBoard();
+		return zombiesAlive == 0;
+	}
+
+	public void zombieDied() {
+		zombiesAlive--;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	public void zombieEntered() {
+		zombiesAlive++;
+	}
 }

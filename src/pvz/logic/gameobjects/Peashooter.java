@@ -1,11 +1,11 @@
 package pvz.logic.gameobjects;
 import utils.Position;
-import pvz.logic.Game;
+import pvz.logic.GameWorld;
 import pvz.view.Messages;
 
-public class Peashooter {
+public class Peashooter extends Plant{
 	
-	public static final int MAX_RESISTANCE = 3;
+	public static final int MAX_LIFE = 3;
 	
 	public static final int FREQUENCY = 1; 
 	
@@ -13,34 +13,16 @@ public class Peashooter {
 	
 	public static final int COST = 50;
 
-	private Position pos;
-	
-	private int resistance;
-	
 	private int freqCount;
 	
-	private Game game;
-	
-	public Peashooter(Position pos, Game game) {
+	public Peashooter(Position pos, GameWorld game) {
+		super(game, pos, MAX_LIFE);
 		freqCount = -1;
-		resistance = MAX_RESISTANCE;
-		this.pos = new Position(pos);
-		this.game = game;
-	}
-	
-	public Peashooter(Peashooter peashooter) {
-		resistance = peashooter.resistance;
-		freqCount = peashooter.freqCount;
-		pos = new Position(peashooter.pos);
-		game = peashooter.game;
 	}
 	
 	// We set freqCount at -1 so peashooters cant shoot the instant they are planted
 	
-	public int getResistance() {
-		return resistance;
-	}
-	
+	@Override
 	public void update() {
 		if (!isAlive()) {
 			return;
@@ -48,43 +30,47 @@ public class Peashooter {
 		freqCount++;
 		if (freqCount >= FREQUENCY) {
 			freqCount = 0;
-			Position z = new Position(game.zombieInPeashooterRange(pos));
-			if (!z.equals(pos)) {
-				game.attackZombie(z, DAMAGE);
+			boolean hit;
+			Position aux = pos.right();
+			while (game.isInsideBoard(aux)) {
+				GameItem item = game.getGameItemInPos(aux);
+				if (item != null) {
+				hit = item.receivePlantAttack(DAMAGE);
+				if (hit) break;
+				}
+				aux = aux.right();
 			}
 		}
 	}
 	
-	public boolean isInPosition(Position pos) {
-		return (this.pos.equals(pos));
+	@Override
+	public int getCost() {
+		return COST;
 	}
 	
-	public void receiveDamage(int damage) {
-		resistance -= damage;
+	@Override
+	public String getDescription() {
+		return Messages.PEASHOOTER_DESCRIPTION.formatted(COST, DAMAGE, MAX_LIFE);
 	}
 	
-	public boolean isAlive() {
-		if (resistance <= 0) return false;
-		return true;
+	@Override
+	protected String getSymbol() {
+	    return Messages.PEASHOOTER_SYMBOL; // "P"
 	}
 	
-	public static String getDescription() {
-		return Messages.PEASHOOTER_DESCRIPTION.formatted(COST, DAMAGE, MAX_RESISTANCE);
+	@Override
+	public String getName() {
+		return Messages.PEASHOOTER_NAME;
 	}
 	
-	public String getIcon() {
-		return String.format(Messages.PEASHOOTER_ICON, resistance);
+	@Override
+	public String getShortcut() {
+		return Messages.PEASHOOTER_SYMBOL;
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	@Override
+	public Plant spawn(Position pos, GameWorld game) {
+		return new Peashooter(pos,game);
+	}
 }
 	

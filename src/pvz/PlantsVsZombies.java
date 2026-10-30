@@ -64,7 +64,7 @@ public class PlantsVsZombies {
 		System.out.println(String.format(Messages.CONFIGURED_SEED, seed));
 
 		Game game = new Game(seed, level);
-		Controller controller = new Controller(game);
+		Controller controller = new Controller(game,game);
 		controller.run();
 	}
 

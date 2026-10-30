@@ -1,50 +1,26 @@
 package pvz.logic.gameobjects;
 
 import utils.Position;
-import pvz.logic.Game;
+import pvz.logic.GameWorld;
 import pvz.view.Messages;
 
-public class Sunflower {
-	
-	public static final int FREQUENCY = 3; 
-	
-	public static final int MAX_RESISTANCE = 1;
-	
+public class Sunflower extends Plant {
+
+	public static final int FREQUENCY = 3;
+
+	public static final int MAX_LIFE = 1;
+
 	public static final int SUN_GEN = 10;
-	
+
 	public static final int COST = 20;
 
-	private Position pos;
-	
-	private int resistance;
-	
 	private int freqCount;
-	
-	private Game game;
-	
-	public Sunflower (Position pos, Game game) {
-		this.pos = new Position(pos);
+
+	public Sunflower(Position pos, GameWorld game) {
+		super(game, pos, MAX_LIFE);
 		freqCount = -1;
-		resistance = MAX_RESISTANCE;
-		this.game = game;
 	}
-	
-	public Sunflower(Sunflower sunflower) {
-		resistance = sunflower.resistance;
-		freqCount = sunflower.freqCount;
-		pos = new Position(sunflower.pos);
-		game = sunflower.game;
-	}
-	
-	
-	public int getResistance() {
-		return resistance;
-	}
-	
-	public int getSunGen() {
-		return SUN_GEN;
-	}
-	
+
 	public void update() {
 		if (!isAlive()) {
 			return;
@@ -55,39 +31,34 @@ public class Sunflower {
 			game.generateSunCoins(SUN_GEN);
 		}
 	}
-	
-	public boolean isInPosition(Position pos) {
-		return (this.pos.equals(pos));
+
+	@Override
+	public int getCost() {
+		return COST;
 	}
-	
-	public void receiveDamage(int damage) {
-		resistance -= damage;
+
+	@Override
+	public String getDescription() {
+		return Messages.SUNFLOWER_DESCRIPTION.formatted(COST, 0, MAX_LIFE);
 	}
-	
-	public boolean isAlive() {
-		if (resistance <= 0) return false;
-		return true;
+
+	@Override
+	protected String getSymbol() {
+	    return Messages.SUNFLOWER_SYMBOL;
 	}
-	
-	public static String getDescription() {
-		return Messages.SUNFLOWER_DESCRIPTION.formatted(COST, 0, MAX_RESISTANCE);
+
+	@Override
+	public String getName() {
+		return Messages.SUNFLOWER_NAME;
 	}
-	
-	public String getIcon() {
-		return String.format(Messages.SUNFLOWER_ICON, resistance);
+
+	@Override
+	public String getShortcut() {
+		return Messages.SUNFLOWER_SYMBOL;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	@Override
+	public Plant spawn(Position pos, GameWorld game) {
+		return new Sunflower(pos, game);
+	}
 }
