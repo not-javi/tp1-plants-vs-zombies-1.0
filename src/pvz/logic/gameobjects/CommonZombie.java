@@ -47,18 +47,13 @@ public class CommonZombie extends Zombie {
 	}
 
 	@Override
-	protected String getSymbol() {
+	public String getSymbol() {
 	    return Messages.ZOMBIE_SYMBOL;
 	}
 
 	@Override
 	public String getName() {
 		return Messages.ZOMBIE_NAME;
-	}
-
-	@Override
-	public String getShortcut() {
-		return Messages.ZOMBIE_SYMBOL;
 	}
 
 	@Override

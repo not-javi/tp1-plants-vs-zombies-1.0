@@ -10,4 +10,6 @@ public interface GameStatus {
 	boolean isPlayerWinner();
 	boolean isZombiesWinner();
 	boolean hasGameFinished();
+	int getCaughtCoins();
+	int getGeneratedCoins();
 }

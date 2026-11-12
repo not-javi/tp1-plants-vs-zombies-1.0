@@ -10,8 +10,6 @@ public class Sunflower extends Plant {
 
 	public static final int MAX_LIFE = 1;
 
-	public static final int SUN_GEN = 10;
-
 	public static final int COST = 20;
 
 	private int freqCount;
@@ -21,14 +19,15 @@ public class Sunflower extends Plant {
 		freqCount = -1;
 	}
 
+	@Override
 	public void update() {
 		if (!isAlive()) {
 			return;
 		}
 		freqCount++;
 		if (freqCount >= FREQUENCY) {
+			game.generateSun();
 			freqCount = 0;
-			game.generateSunCoins(SUN_GEN);
 		}
 	}
 
@@ -43,18 +42,13 @@ public class Sunflower extends Plant {
 	}
 
 	@Override
-	protected String getSymbol() {
+	public String getSymbol() {
 	    return Messages.SUNFLOWER_SYMBOL;
 	}
 
 	@Override
 	public String getName() {
 		return Messages.SUNFLOWER_NAME;
-	}
-
-	@Override
-	public String getShortcut() {
-		return Messages.SUNFLOWER_SYMBOL;
 	}
 
 	@Override

@@ -24,7 +24,7 @@ public abstract class Zombie extends GameObject {
 	}
 
 	@Override
-	public void onDead() {
+	public void onExit() {
 		game.zombieDied();
 	}
 	
@@ -32,4 +32,6 @@ public abstract class Zombie extends GameObject {
 	public void onEnter() {
 		game.zombieEntered();
 	}
+	
+	public abstract Zombie spawn(Position pos, GameWorld game);
 }

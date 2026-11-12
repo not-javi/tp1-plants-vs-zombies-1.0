@@ -18,8 +18,6 @@ import pvz.logic.factories.ZombieFactory;
 public class ZombiesManager {
 
 	private GameWorld game;
-	
-	
 
 	private Level level;
 
@@ -85,7 +83,7 @@ public class ZombiesManager {
 	public void zombieDied() {
 		zombiesAlive--;
 	}
-	
+
 	public void zombieEntered() {
 		zombiesAlive++;
 	}

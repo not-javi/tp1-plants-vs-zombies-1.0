@@ -6,8 +6,8 @@ import pvz.control.Level;
  * Central repository of all user-facing string literals and format templates.
  *
  * <p>Keeps UI text out of logic and control classes. Every string that appears
- * on the console — prompts, error messages, plant descriptions, icons, and
- * end-of-game banners — is defined here as a {@code public static final}
+ * on the console ï¿½ prompts, error messages, plant descriptions, icons, and
+ * end-of-game banners ï¿½ is defined here as a {@code public static final}
  * constant. Format strings follow {@link String#format} conventions.
  *
  * <p>This class is not instantiable; it is a pure namespace for constants and
@@ -68,31 +68,32 @@ public class Messages {
 	public static final String PEASHOOTER_SYMBOL = "P";
 	public static final String PEASHOOTER_NAME = "Peashooter";
 	public static final String PEASHOOTER_DESCRIPTION = "[P]eashooter: cost='%d' suncoins, damage='%d', endurance='%d'";
-	public static final String PEASHOOTER_ICON = " P[%02d]";
 	public static final String PEASHOOTER_NAME_AND_SHORTCUT = "[P]eashooter";
 
 	public static final String SUNFLOWER_SYMBOL = "S";
 	public static final String SUNFLOWER_NAME = "Sunflower";
 	public static final String SUNFLOWER_DESCRIPTION = "[S]unflower: cost='%d' suncoins, damage='%d', endurance='%d'";
-	public static final String SUNFLOWER_ICON = " S[%02d]";
 	public static final String SUNFLOWER_NAME_AND_SHORTCUT = "[S]unflower";
 
 	public static final String ZOMBIE_SYMBOL = "Z";
 	public static final String ZOMBIE_NAME = "Zombie";
 	public static final String ZOMBIE_DESCRIPTION = "%s: speed='%d', damage='%d', endurance='%d'";
-	public static final String ZOMBIE_ICON = " Z[%02d]";
 	public static final String ZOMBIE_NAME_AND_SHORTCUT = "[Z]ombie";
 
 	public static final String WALL_NUT_SYMBOL = "WN";
 	public static final String WALL_NUT_NAME = "Wall-Nut";
 	public static final String WALL_NUT_NAME_SHORTCUT = "[W]all-[N]ut";
+	public static final String WALL_NUT_DESCRIPTION = "[W]all-[N]ut: cost='%d' suncoins, damage='%d', endurance='%d'";
 
 	public static final String CHERRY_BOMB_SYMBOL = "c";
 	public static final String CHERRY_BOMB_NAME = "Cherry-Bomb";
 	public static final String CHERRY_BOMB_NAME_SHORTCUT = "[C]herry-Bomb";
+	public static final String CHERRY_BOMB_DESCRIPTION = "[C]herry-Bomb: cost='%d' suncoins, damage='%d', endurance='%d'";
+	
 
 	public static final String BUCKET_HEAD_ZOMBIE_SYMBOL = "Bz";
 	public static final String BUCKET_HEAD_ZOMBIE_NAME = "BucketHead Zombie";
+	public static final String BUCKET_ZOMBIE_NAME_SHORTCUT = "[B]ucket [Z]ombie";
 
 	public static final String SPORTY_ZOMBIE_SYMBOL = "Sz";
 	public static final String SPORTY_ZOMBIE_NAME = "Sporty Zombie";
@@ -178,7 +179,8 @@ public class Messages {
 	public static final String COMMAND_CATCH_DETAILS = "[C]atch <col> <row>";
 	public static final String COMMAND_CATCH_HELP = "catch a sun, if possible, in position (col, row)";
 
-	public static final String NO_CATCHABLE_IN_POSITION = "No sun in (%d, %d)";
+	public static final String NO_CATCHABLE_IN_POSITION = "No sun in";
+	public static final String ALREADY_CAUGHT_SUN = "A sun was already caught this cycle";
 
 	/**
 	 * Formats a debug message.

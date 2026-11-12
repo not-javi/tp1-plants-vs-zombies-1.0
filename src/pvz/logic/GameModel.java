@@ -8,9 +8,10 @@ public interface GameModel {
 	void update();
 	void quit();
 	
-	public String getPlantsList();
+	String getPlantsList();
 	int addPlant(String plantName, Position pos);
 	int addCheatPlant(String plantName, Position pos);
 	int addZombie(String zombieName, Position pos);
 	String getZombiesList();
+	int catchCommand(Position pos);
 }

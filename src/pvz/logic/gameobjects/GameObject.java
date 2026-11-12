@@ -16,12 +16,10 @@ public abstract class GameObject implements GameItem {
 		this.life = life;
 	}
 
-	@Override
 	public boolean receivePlantAttack(int damage) {
 		return false;
 	}
 
-	@Override
 	public boolean receiveZombieAttack(int damage) {
 		return false;
 	}
@@ -33,7 +31,7 @@ public abstract class GameObject implements GameItem {
 	public abstract void update();
 
 	public String getIcon() {
-	    return Messages.GAME_OBJECT_ICON.formatted(this.getSymbol(), this.life);
+		return Messages.GAME_OBJECT_ICON.formatted(this.getSymbol(), this.life);
 	}
 
 	public abstract String getDescription();
@@ -48,27 +46,24 @@ public abstract class GameObject implements GameItem {
 	public void onExit() {
 	}
 
-	public void onDead() {
+	public boolean fillsPos() {
+		return true;
+	}
+
+	public boolean catchObject(Position pos) {
+		return false;
 	}
 
 	protected void takeDamage(int damage) {
 		this.life -= damage;
-		if (!this.isAlive())
-			this.onDead();
 	}
 
 	public abstract String getName();
-	
-	protected abstract String getSymbol();
 
-	public abstract String getShortcut();
-	
-	
-
-	public abstract GameObject spawn(Position pos, GameWorld game);
+	public abstract String getSymbol();
 
 	public boolean matchGameObjectName(String name) {
-		return this.getName().equalsIgnoreCase(name) || this.getShortcut().equalsIgnoreCase(name);
+		return this.getName().equalsIgnoreCase(name) || this.getSymbol().equalsIgnoreCase(name);
 	}
 
 }

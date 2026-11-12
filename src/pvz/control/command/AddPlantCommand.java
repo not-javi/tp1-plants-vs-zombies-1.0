@@ -52,12 +52,10 @@ public class AddPlantCommand extends Command {
 			view.showError(Messages.INVALID_POSITION);
 			break;
 		case 2:
-			view.showError(Messages.NOT_ENOUGH_COINS);
-			break;
-		case 3:
 			view.showError(Messages.INVALID_GAME_OBJECT);
 			break;
-		case 4:
+		case 3:
+			view.showError(Messages.NOT_ENOUGH_COINS);
 			break;
 		}
 	}

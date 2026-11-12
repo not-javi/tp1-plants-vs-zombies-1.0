@@ -4,6 +4,7 @@ import pvz.logic.GameModel;
 import pvz.logic.GameStatus;
 import pvz.view.GamePrinter;
 import pvz.view.GameView;
+import pvz.logic.Game;
 import pvz.view.Messages;
 import pvz.control.command.Command;
 
@@ -22,6 +23,10 @@ public class Controller {
 	private final GameStatus gameStatus;
 	private final GameView view;
 
+	public Controller(Game game) {
+		this(game,game);
+	}
+	
 	public Controller(GameModel gameModel, GameStatus gameStatus) {
 		this.gameModel = gameModel;
 		this.gameStatus = gameStatus;

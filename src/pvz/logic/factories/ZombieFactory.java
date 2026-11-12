@@ -7,21 +7,22 @@ import java.util.Collections;
 
 import pvz.logic.gameobjects.Zombie;
 import pvz.logic.gameobjects.CommonZombie;
-
+import pvz.logic.gameobjects.BucketHeadZombie;
+import pvz.logic.gameobjects.SportyZombie;
+import pvz.logic.gameobjects.ExplosiveZombie;
 
 import pvz.logic.GameWorld;
 import utils.Position;
 
 public class ZombieFactory {
 
-	private static final List<Zombie> AVAILABLE_ZOMBIES = Arrays.asList(
-			new CommonZombie(null, null)
-			);
+	private static final List<Zombie> AVAILABLE_ZOMBIES = Arrays.asList(new CommonZombie(null, null),
+			new BucketHeadZombie(null, null), new SportyZombie(null, null), new ExplosiveZombie(null,null));
 
 	public static Zombie spawnZombie(String zombieName, GameWorld game, Position position) {
 		for (Zombie zombie : AVAILABLE_ZOMBIES) {
 			if (zombie.matchGameObjectName(zombieName)) {
-				return (Zombie) zombie.spawn(position, game);
+				return zombie.spawn(position, game);
 			}
 		}
 		return null;
@@ -30,10 +31,10 @@ public class ZombieFactory {
 	public static List<Zombie> getAvailableZombies() {
 		return Collections.unmodifiableList(AVAILABLE_ZOMBIES);
 	}
-	
+
 	public static Zombie spawnRandomZombie(GameWorld game, Position position, Random rand) {
 		int randomIndex = rand.nextInt(AVAILABLE_ZOMBIES.size());
 		Zombie prototype = AVAILABLE_ZOMBIES.get(randomIndex);
-	    return (Zombie) prototype.spawn(position, game);
+		return (Zombie) prototype.spawn(position, game);
 	}
 }

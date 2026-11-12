@@ -68,6 +68,8 @@ public class GamePrinter implements GameView {
 		buffer.append(String.format(Messages.NUMBER_OF_CYCLES, game.getCycles()));
 		buffer.append(String.format(Messages.NUMBER_OF_COINS, game.getCoins()));
 		buffer.append(String.format(Messages.REMAINING_ZOMBIES, game.getRemainingZombies()));
+		buffer.append(String.format(Messages.GENERATED_SUNS, game.getGeneratedCoins()));
+		buffer.append(String.format(Messages.CAUGHT_SUNS, game.getCaughtCoins()));
 		return buffer.toString();
 	}
 
@@ -86,9 +88,13 @@ public class GamePrinter implements GameView {
 
 		for (int row = 0; row < GameWorld.NUM_ROWS; row++) {
 			str.append(MARGIN).append(VERTICAL_DELIMITER);
-			for (int col = 0; col < GameWorld.NUM_COLS; col++) {
-				str.append(StringUtils.centre(game.positionToString(new Position(row, col)), CELL_SIZE))
-						.append(VERTICAL_DELIMITER);
+			for (int col = 0; col <= GameWorld.NUM_COLS; col++) {
+				if (col < GameWorld.NUM_COLS)
+					str.append(StringUtils.centre(game.positionToString(new Position(row, col)), CELL_SIZE))
+							.append(VERTICAL_DELIMITER);
+				else
+					str.append(VERTICAL_DELIMITER)
+							.append(StringUtils.centre(game.positionToString(new Position(row, col)), CELL_SIZE));
 			}
 			str.append(INDENTED_ROW_BORDER);
 		}
