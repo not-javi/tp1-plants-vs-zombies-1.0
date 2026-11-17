@@ -22,7 +22,7 @@ public abstract class Command {
 				return command.create(commandWords);
 			}
 		}
-		return null;
+		return new UnknownCommand();
 	}
 
 	protected boolean matchCommand(String com) {
@@ -33,6 +33,14 @@ public abstract class Command {
 		if (words.length == 1) {
 			return this;
 		}
+		return new ErrorCommand(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);
+	}
+
+	protected static Command checkWords(String[] words, int expected) {
+		if (words.length < expected)
+			return new ErrorCommand(Messages.COMMAND_PARAMETERS_MISSING);
+		if (words.length > expected)
+			return new ErrorCommand(Messages.INVALID_COMMAND);
 		return null;
 	}
 

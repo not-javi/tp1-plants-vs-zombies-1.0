@@ -354,8 +354,12 @@ class GameTest {
         game.addGameObject("s", at(0, 0));
         updateTimes(4);
         assertEquals(1, game.getGeneratedCoins());
-        updateTimes(3);
+        updateTimes(2);
+        // a new sun has been generated because the game has run for 5 cycles
         assertEquals(2, game.getGeneratedCoins());
+        // The sunflower has generated another suncoin
+        updateTimes(1);
+        assertEquals(3, game.getGeneratedCoins());
     }
 
     // ------------------------------------------------------------------ //
@@ -612,14 +616,14 @@ class GameTest {
     }
 
     @Test
-    void pushedActions_runLastInFirstOut() {
+    void pushedActions_runFirstInFirstOut() {
         List<String> order = new ArrayList<>();
         game.pushAction(world -> order.add("first"));
         game.pushAction(world -> order.add("second"));
 
         game.update();
 
-        assertEquals(List.of("second", "first"), order);
+        assertEquals(List.of("first","second"), order);
     }
 
     @Test

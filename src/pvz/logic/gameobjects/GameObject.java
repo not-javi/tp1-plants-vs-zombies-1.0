@@ -58,6 +58,20 @@ public abstract class GameObject implements GameItem {
 		this.life -= damage;
 	}
 
+	public int getDamage() {
+		return 0;
+	}
+
+	public int getEndurance() {
+		return life;
+	}
+	
+	public boolean isInColumn(int column) {
+		return this.pos.isInCol(column);
+	}
+
+	public abstract boolean canBeSpawnedAt(Position pos);
+
 	public abstract String getName();
 
 	public abstract String getSymbol();

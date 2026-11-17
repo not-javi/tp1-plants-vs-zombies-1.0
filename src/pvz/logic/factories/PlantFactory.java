@@ -21,7 +21,7 @@ public class PlantFactory {
 	public static Plant spawnPlant(String plantName, GameWorld game, Position pos) {
 		for (Plant aux : AVAILABLE_PLANTS) {
 			if (aux.matchGameObjectName(plantName)) {
-				return aux.spawn(pos, game);
+				return aux.copy(pos, game);
 			}
 		}
 		return null;

@@ -40,7 +40,12 @@ public class WallNut extends Plant {
 	}
 
 	@Override
-	public Plant spawn(Position pos, GameWorld game) {
+	public Plant copy(Position pos, GameWorld game) {
 		return new WallNut(pos, game);
+	}
+	
+	@Override 
+	public int getDamage() {
+		return 0;
 	}
 }

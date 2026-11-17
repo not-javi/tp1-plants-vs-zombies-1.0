@@ -179,7 +179,7 @@ public class Messages {
 	public static final String COMMAND_CATCH_DETAILS = "[C]atch <col> <row>";
 	public static final String COMMAND_CATCH_HELP = "catch a sun, if possible, in position (col, row)";
 
-	public static final String NO_CATCHABLE_IN_POSITION = "No sun in";
+	public static final String NO_CATCHABLE_IN_POSITION = "No sun in (%d, %d)";
 	public static final String ALREADY_CAUGHT_SUN = "A sun was already caught this cycle";
 
 	/**

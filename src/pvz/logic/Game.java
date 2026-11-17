@@ -19,7 +19,6 @@ public class Game implements GameModel, GameStatus, GameWorld {
 	private SunsManager sunsManager;
 	private GameObjectContainer container;
 	private boolean finished;
-	private boolean zombiesWin;
 	private boolean caughtSun;
 	private long seed;
 	private Deque<GameAction> actions;
@@ -41,42 +40,38 @@ public class Game implements GameModel, GameStatus, GameWorld {
 		return container.add(item);
 	}
 
-	private int addPlant(String plantName, Position pos, boolean consumeCoins) {
-		if (!isInsideBoard(pos) || !isEmpty(pos)) {
-			return 1;
+	private boolean addGameObject(String name, Position pos, boolean consumeCoins) {
+		Plant plant = PlantFactory.spawnPlant(name, this, pos);
+		if (plant != null) {
+		    if (!plant.canBeSpawnedAt(pos) || (consumeCoins && sunCoins < plant.getCost())) return false;
+		    if (!addGameObject(plant)) return false;
+		    if (consumeCoins) sunCoins -= plant.getCost();
+		    return true;
 		}
-		Plant plant = PlantFactory.spawnPlant(plantName, this, pos);
-		if (plant == null)
-			return 2;
-		if (consumeCoins && sunCoins < plant.getCost()) {
-			return 3;
+		Zombie zombie = ZombieFactory.spawnZombie(name, this, pos);
+		if (zombie != null && zombie.canBeSpawnedAt(pos) && addGameObject(zombie)) {
+		    zombiesManager.zombieAdded();
+		    return true;
 		}
-		addGameObject(plant);
-		if (consumeCoins)
-			sunCoins -= plant.getCost();
-		return 0;
-
+		return false;
+	}
+	
+	public boolean addGameObject(String name, Position pos) {
+		return addGameObject(name,pos,true);
+	}
+	
+	public boolean addGameObjectForFree(String name, Position pos) {
+		return addGameObject(name,pos,false);
 	}
 
-	public int addPlant(String plantName, Position pos) {
-		return addPlant(plantName, pos, true);
+	public boolean zombieAttack(Position pos, int damage) {
+		return container.zombieAttack(pos, damage);
 	}
-
-	public int addCheatPlant(String plantName, Position pos) {
-		return addPlant(plantName, pos, false);
+	
+	public boolean plantAttack(Position pos, int damage) {
+		return container.plantAttack(pos, damage);
 	}
-
-	public int addZombie(String zombieName, Position pos) {
-		if (!isInsideBoard(pos) || !isEmpty(pos)) {
-			return 1;
-		}
-		Zombie zombie = ZombieFactory.spawnZombie(zombieName, this, pos);
-		if (addGameObject(zombie))
-			return 0;
-		else
-			return 2;
-	}
-
+	
 	public void generateSun() {
 		addGameObject(new Sun(randomPosition(),this ));
 		generatedCoins += 1;
@@ -117,7 +112,6 @@ public class Game implements GameModel, GameStatus, GameWorld {
 		rand = new Random(seed);
 		cycle = 0;
 		finished = false;
-		zombiesWin = false;
 		sunCoins = INITIAL_COINS;
 		this.generatedCoins = 0;
 		this.caughtCoins = 0;
@@ -134,10 +128,6 @@ public class Game implements GameModel, GameStatus, GameWorld {
 
 	public boolean isEmpty(Position pos) {
 		return (container.isPositionEmpty(pos));
-	}
-
-	public GameItem getGameItemInPos(Position pos) {
-		return container.getGameItemInPos(pos);
 	}
 
 	public void generateCoins(int coins) {
@@ -159,12 +149,7 @@ public class Game implements GameModel, GameStatus, GameWorld {
 	}
 
 	public String positionToString(Position pos) {
-		String res = "";
-		res += container.getIconInPosition(pos);
-		if (res.isEmpty()) {
-			return " ";
-		}
-		return res;
+		return container.positionToString(pos);
 	}
 
 	public int getCycles() {
@@ -179,39 +164,24 @@ public class Game implements GameModel, GameStatus, GameWorld {
 		return zombiesManager.getRemainingZombies();
 	}
 
-	public boolean isZombiesWinner() {
-		return zombiesWin;
+	public boolean doZombiesReachedTheHouse() {
+		return container.anyInColumn(-1);
 	}
 
-	public boolean isPlayerWinner() {
-		return zombiesManager.getRemainingZombies() == 0 && zombiesManager.areAllZombiesDead();
+	public boolean playerWins() {
+		return zombiesManager.getRemainingZombies() <= 0 && zombiesManager.areAllZombiesDead();
 	}
 
 	public boolean playerQuits() {
-		return finished && !isPlayerWinner() && !isZombiesWinner();
+		return finished && !playerWins() && !doZombiesReachedTheHouse();
 	}
 
 	public boolean hasGameFinished() {
-		return finished || isPlayerWinner() || isZombiesWinner();
+		return finished || playerWins() || doZombiesReachedTheHouse();
 	}
 
 	public boolean isInsideBoard(Position pos) {
 		return pos.isInside(NUM_COLS, NUM_ROWS);
-	}
-
-	public void zombieInPos(Position pos) {
-		if (pos.isInCol(-1))
-			zombiesWin = true;
-	}
-
-	@Override
-	public void zombieDied() {
-		zombiesManager.zombieDied();
-	}
-
-	@Override
-	public void zombieEntered() {
-		zombiesManager.zombieEntered();
 	}
 
 	public void pushAction(GameAction gameAction) {
@@ -230,6 +200,7 @@ public class Game implements GameModel, GameStatus, GameWorld {
 	}
 
 	public boolean catchObject(Position pos) {
+		if (caughtSun) return false;
 		int caught = container.catchObject(pos);
 		if (caught > 0) {
 			caughtCoins += caught;
@@ -239,16 +210,6 @@ public class Game implements GameModel, GameStatus, GameWorld {
 		return false;
 	}
 
-	public int catchCommand(Position pos) {
-		if (!isInsideBoard(pos))
-			return 1;
-		if (caughtSun)
-			return 3;
-		if (catchObject(pos))
-			return 0;
-		return 2;
-	}
-
 	public int getGeneratedCoins() {
 		return generatedCoins;
 	}
@@ -256,5 +217,20 @@ public class Game implements GameModel, GameStatus, GameWorld {
 	public int getCaughtCoins() {
 		return caughtCoins;
 	}
+	
+	public boolean isInBoardLimit(Position position) {
+		return position.row() >= 0 && position.row() < NUM_ROWS && position.column() >= -1 && position.column() <= NUM_COLS;
+	}
 
+	public boolean isValidPosition(Position pos) {
+		return isInsideBoard(pos) && isEmpty(pos);
+	}
+	
+	public boolean isSunAlreadyCaught() {
+		return caughtSun;
+	}
+	
+	public void zombieKilled() {
+		zombiesManager.zombieKilled();
+	}
 }

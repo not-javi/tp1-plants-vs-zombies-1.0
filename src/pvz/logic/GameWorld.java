@@ -10,14 +10,15 @@ public interface GameWorld {
 	
 	boolean isEmpty(Position position);
 	boolean isInsideBoard(Position position);
+	boolean isInBoardLimit(Position pos);
+	Position randomPosition();
 	
-	GameItem getGameItemInPos(Position pos);
 	void generateCoins(int coins);
 	boolean addGameObject(GameObject item);
 	void generateSun();
 	
-	void zombieInPos(Position pos);
-	void zombieDied();
-	void zombieEntered();
+	void zombieKilled();
 	void pushAction(GameAction gameAction);
+	boolean zombieAttack(Position p, int damage);
+	boolean plantAttack(Position p, int damage);
 }

@@ -18,7 +18,7 @@ public class Peashooter extends Plant {
 
 	public Peashooter(Position pos, GameWorld game) {
 		super(game, pos, MAX_LIFE);
-		freqCount = -1;
+		freqCount = 0;
 	}
 
 	// We set freqCount at -1 so peashooters cant shoot the instant they are planted
@@ -31,16 +31,9 @@ public class Peashooter extends Plant {
 		freqCount++;
 		if (freqCount >= FREQUENCY) {
 			freqCount = 0;
-			boolean hit;
-			Position aux = pos.right();
-			while (game.isInsideBoard(aux)) {
-				GameItem item = game.getGameItemInPos(aux);
-				if (item != null) {
-					hit = item.receivePlantAttack(DAMAGE);
-					if (hit)
-						break;
-				}
-				aux = aux.right();
+			Position aux = pos;
+			while (game.isInsideBoard(aux) && !game.plantAttack(aux, DAMAGE)) {
+			    aux = aux.right();
 			}
 		}
 	}
@@ -66,7 +59,12 @@ public class Peashooter extends Plant {
 	}
 
 	@Override
-	public Plant spawn(Position pos, GameWorld game) {
+	public Plant copy(Position pos, GameWorld game) {
 		return new Peashooter(pos, game);
+	}
+	
+	@Override 
+	public int getDamage() {
+		return DAMAGE;
 	}
 }

@@ -8,7 +8,7 @@ public class SunsManager {
 
 	public SunsManager(GameWorld game) {
 		this.game = game;
-		cooldown = COOLDOWN;
+		cooldown = COOLDOWN + 1;
 	}
 
 	public void update() {

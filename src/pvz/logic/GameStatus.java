@@ -7,8 +7,8 @@ public interface GameStatus {
 	int getRemainingZombies();
 	String positionToString(Position pos);
 	boolean playerQuits();
-	boolean isPlayerWinner();
-	boolean isZombiesWinner();
+	boolean playerWins();
+	boolean doZombiesReachedTheHouse();
 	boolean hasGameFinished();
 	int getCaughtCoins();
 	int getGeneratedCoins();

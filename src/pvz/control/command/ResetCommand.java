@@ -41,14 +41,14 @@ public class ResetCommand extends Command {
 		if (words.length == 3) {
 			Level level = Level.valueOfIgnoreCase(words[1]);
 			if (level == null)
-				return null;
+				return new ErrorCommand(Messages.INVALID_COMMAND);
 			try {
 				return new ResetCommand(level, Long.parseLong(words[2]));
 			} catch (NumberFormatException nfe) {
-				return null;
+				return new ErrorCommand(Messages.INVALID_COMMAND);
 			}
 		}
-		return null;
+		return new ErrorCommand(Messages.COMMAND_INCORRECT_PARAMETER_NUMBER);
 	}
 
 }

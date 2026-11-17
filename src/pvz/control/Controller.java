@@ -11,11 +11,12 @@ import pvz.control.command.Command;
 /**
  * Input/output coordinator of the game (the C in MVC).
  *
- * <p>Owns the game loop: reads a line from stdin, parses it into a
- * command, validates parameters (plant type, position), delegates
- * state changes to {@link Game}, and triggers a board reprint via
- * {@link tp1.pvz.view.GameView>} when the cycle advances. It holds no game
- * state of its own; the source of truth is always {@link Game}.
+ * <p>
+ * Owns the game loop: reads a line from stdin, parses it into a command,
+ * validates parameters (plant type, position), delegates state changes to
+ * {@link Game}, and triggers a board reprint via {@link tp1.pvz.view.GameView>}
+ * when the cycle advances. It holds no game state of its own; the source of
+ * truth is always {@link Game}.
  */
 public class Controller {
 
@@ -24,9 +25,9 @@ public class Controller {
 	private final GameView view;
 
 	public Controller(Game game) {
-		this(game,game);
+		this(game, game);
 	}
-	
+
 	public Controller(GameModel gameModel, GameStatus gameStatus) {
 		this.gameModel = gameModel;
 		this.gameStatus = gameStatus;
@@ -41,20 +42,9 @@ public class Controller {
 		while (!gameStatus.hasGameFinished() && !gameStatus.playerQuits()) {
 			String words[] = view.getPrompt();
 			Command command = Command.parse(words);
-			if (command != null) {
-				command.execute(gameModel, view);
-			} 
-			else {
-				view.showError(Messages.UNKNOWN_COMMAND);
-			}
-			
+			command.execute(gameModel, view);
 		}
 		view.showEndMessage();
 	}
-	
-	
-	
-	
-	
-	
+
 }

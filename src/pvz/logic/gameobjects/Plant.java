@@ -19,6 +19,11 @@ public abstract class Plant extends GameObject {
 	}
 
 	public abstract int getCost();
+
+	@Override
+	public boolean canBeSpawnedAt(Position pos) {
+		return game.isInsideBoard(pos) && game.isEmpty(pos);
+	}
 	
-	public abstract Plant spawn(Position pos, GameWorld game);
+	public abstract Plant copy(Position pos, GameWorld game);
 }

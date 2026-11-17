@@ -5,8 +5,13 @@ import pvz.logic.GameWorld;
 
 public abstract class Zombie extends GameObject {
 
-	public Zombie(GameWorld game, Position pos, int life) {
+	private int freqCount = -1;
+
+	private int speed;
+
+	public Zombie(GameWorld game, Position pos, int life, int speed) {
 		super(game, pos, life);
+		this.speed = speed;
 	}
 
 	@Override
@@ -18,20 +23,32 @@ public abstract class Zombie extends GameObject {
 		return false;
 	}
 
-	public void didZombiesWin() {
-		if (this.isAlive())
-			game.zombieInPos(this.pos);
+	@Override
+	public void update() {
+		if (!isAlive())
+			return;
+		Position next = pos.left();
+		if (!game.isEmpty(next)) {
+			game.zombieAttack(next, this.getDamage());
+			freqCount = 0;
+			return;
+		}
+		freqCount++;
+		if (freqCount >= speed) {
+			freqCount = 0;
+			pos = next;
+		}
 	}
 
 	@Override
 	public void onExit() {
-		game.zombieDied();
+		game.zombieKilled();
 	}
-	
+
 	@Override
-	public void onEnter() {
-		game.zombieEntered();
+	public boolean canBeSpawnedAt(Position pos) {
+		return game.isInBoardLimit(pos) && game.isEmpty(pos);
 	}
-	
-	public abstract Zombie spawn(Position pos, GameWorld game);
+
+	public abstract Zombie copy(Position pos, GameWorld game);
 }

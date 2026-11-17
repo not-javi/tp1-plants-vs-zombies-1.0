@@ -1,6 +1,7 @@
 package pvz.control.command;
 
 import pvz.logic.GameModel;
+import pvz.logic.factories.PlantFactory;
 import pvz.view.GameView;
 import pvz.view.Messages;
 import utils.Position;
@@ -26,34 +27,28 @@ public class AddPlantCheatCommand extends Command {
 
 	@Override
 	public Command create(String[] words) {
-		if (words.length == 4) {
+		Command error = checkWords(words,4);
+		if (error != null) return error;
 			try {
 				String plant = words[1];
 				int col = Integer.parseInt(words[2]);
 				int row = Integer.parseInt(words[3]);
-				Position pos = new Position(row, col);
-				return new AddPlantCheatCommand(plant, pos);
+				return new AddPlantCheatCommand(plant, new Position(row, col));
 			} catch (NumberFormatException nfe) {
-				return null;
+				return new ErrorCommand(Messages.INVALID_COMMAND);
 			}
-		}
-		return null;
 	}
 
 	@Override
 	public void execute(GameModel game, GameView view) {
-		int error = game.addCheatPlant(plantName, pos);
-		switch (error) {
-		case 0:
+		if (!game.isValidPosition(pos)) {
+			view.showError(Messages.INVALID_POSITION);
+		} else if (PlantFactory.spawnPlant(plantName, null, pos) == null) {
+			view.showError(Messages.INVALID_GAME_OBJECT);
+		} else {
+			game.addGameObjectForFree(plantName, pos);
 			game.update();
 			view.showGame();
-			break;
-		case 1:
-			view.showError(Messages.INVALID_POSITION);
-			break;
-		case 2:
-			view.showError(Messages.INVALID_GAME_OBJECT);
-			break;
 		}
 	}
 

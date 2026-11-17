@@ -22,7 +22,7 @@ public class ZombieFactory {
 	public static Zombie spawnZombie(String zombieName, GameWorld game, Position position) {
 		for (Zombie zombie : AVAILABLE_ZOMBIES) {
 			if (zombie.matchGameObjectName(zombieName)) {
-				return zombie.spawn(position, game);
+				return zombie.copy(position, game);
 			}
 		}
 		return null;
@@ -35,6 +35,6 @@ public class ZombieFactory {
 	public static Zombie spawnRandomZombie(GameWorld game, Position position, Random rand) {
 		int randomIndex = rand.nextInt(AVAILABLE_ZOMBIES.size());
 		Zombie prototype = AVAILABLE_ZOMBIES.get(randomIndex);
-		return (Zombie) prototype.spawn(position, game);
+		return prototype.copy(position, game);
 	}
 }

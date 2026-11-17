@@ -22,7 +22,7 @@ public class CherryBomb extends Plant {
 
 	public CherryBomb(Position pos, GameWorld game) {
 		super(game, pos, MAX_LIFE);
-		freqCount = 0;
+		freqCount = -1;
 	}
 
 	@Override
@@ -33,7 +33,6 @@ public class CherryBomb extends Plant {
 		freqCount++;
 		if (freqCount >= FREQUENCY) {
 			List<Position> positions = this.pos.areaRad1();
-			positions.removeIf(aux -> !game.isInsideBoard(aux));
 			game.pushAction(ExplosionAction.plantExplosion(DAMAGE, positions));
 			this.takeDamage(this.life);
 		}
@@ -63,7 +62,12 @@ public class CherryBomb extends Plant {
 	}
 
 	@Override
-	public Plant spawn(Position pos, GameWorld game) {
+	public Plant copy(Position pos, GameWorld game) {
 		return new CherryBomb(pos, game);
+	}
+	
+	@Override
+	public int getDamage() {
+		return DAMAGE;
 	}
 }

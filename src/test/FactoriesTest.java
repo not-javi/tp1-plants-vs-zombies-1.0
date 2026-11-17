@@ -5,9 +5,8 @@ import org.junit.jupiter.api.Test;
 import pvz.logic.gameobjects.GameObject;
 import pvz.logic.gameobjects.Plant;
 import pvz.logic.gameobjects.Zombie;
-import pvz.logic.gameobjects.factories.PlantFactory;
-import pvz.logic.gameobjects.factories.ZombieFactory;
-import test.FakeGameWorld;
+import pvz.logic.factories.PlantFactory;
+import pvz.logic.factories.ZombieFactory;
 import utils.Position;
 
 import java.util.List;

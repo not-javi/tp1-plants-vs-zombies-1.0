@@ -6,7 +6,7 @@ import pvz.view.Messages;
 import utils.Position;
 
 public class CatchCommand extends Command {
-	
+
 	private Position pos;
 
 	public CatchCommand() {
@@ -23,35 +23,28 @@ public class CatchCommand extends Command {
 
 	@Override
 	public Command create(String[] words) {
-		if (words.length == 3) {
-			try {
-				int col = Integer.parseInt(words[1]);
-				int row = Integer.parseInt(words[2]);
-				Position pos = new Position(row, col);
-				return new CatchCommand(pos);
-			} catch (NumberFormatException nfe) {
-				return null;
-			}
+		Command error = checkWords(words, 3);
+		if (error != null)
+			return error;
+		try {
+			int col = Integer.parseInt(words[1]);
+			int row = Integer.parseInt(words[2]);
+			return new CatchCommand(new Position(row, col));
+		} catch (NumberFormatException nfe) {
+			return new ErrorCommand(Messages.INVALID_COMMAND);
 		}
-		return null;
 	}
 
 	@Override
 	public void execute(GameModel game, GameView view) {
-		int error = game.catchCommand(pos);
-		switch (error) {
-		case 0:
-			view.showGame();
-			break;
-		case 1:
+		if (!game.isInsideBoard(pos)) {
 			view.showError(Messages.INVALID_POSITION);
-			break;
-		case 2:
-			view.showError(Messages.NO_CATCHABLE_IN_POSITION + " " + pos.positionToString());
-			break;
-		case 3:
+		} else if (game.isSunAlreadyCaught()) {
 			view.showError(Messages.ALREADY_CAUGHT_SUN);
-			break;
+		} else if (!game.catchObject(pos)) {
+			view.showError(Messages.NO_CATCHABLE_IN_POSITION.formatted(pos.column(), pos.row()));
+		} else {
+			view.showGame();
 		}
 	}
 

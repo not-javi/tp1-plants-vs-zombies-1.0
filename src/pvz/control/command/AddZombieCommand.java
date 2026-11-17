@@ -1,6 +1,7 @@
 package pvz.control.command;
 
 import pvz.logic.GameModel;
+import pvz.logic.factories.ZombieFactory;
 import pvz.view.GameView;
 import pvz.view.Messages;
 import utils.Position;
@@ -26,34 +27,28 @@ public class AddZombieCommand extends Command {
 
 	@Override
 	public Command create(String[] words) {
-		if (words.length == 4) {
-			try {
-				String zombie = words[1];
-				int col = Integer.parseInt(words[2]);
-				int row = Integer.parseInt(words[3]);
-				Position pos = new Position(row, col);
-				return new AddZombieCommand(zombie, pos);
-			} catch (NumberFormatException nfe) {
-				return null;
-			}
-		}
-		return null;
+	    Command error = checkWords(words, 4);
+	    if (error != null) return error;
+	    try {
+	        int col = Integer.parseInt(words[2]);
+	        int row = Integer.parseInt(words[3]);
+	        return new AddZombieCommand(words[1], new Position(row, col));
+	    } catch (NumberFormatException nfe) {
+	        return new ErrorCommand(Messages.INVALID_COMMAND);
+	    }
 	}
 
 	@Override
 	public void execute(GameModel game, GameView view) {
-		int error = game.addZombie(zombieName, pos);
-		switch (error) {
-		case 0:
+		if (!game.isValidPosition(pos)) {
+			view.showError(Messages.INVALID_POSITION);
+		} else if (ZombieFactory.spawnZombie(zombieName, null, pos) == null) {
+			view.showError(Messages.INVALID_GAME_OBJECT);
+		} else if (!game.addGameObject(zombieName, pos)) {
+			view.showError(Messages.INVALID_POSITION);
+		} else {
 			game.update();
 			view.showGame();
-			break;
-		case 1:
-			view.showError(Messages.INVALID_POSITION);
-			break;
-		case 2:
-			view.showError(Messages.INVALID_GAME_OBJECT);
-			break;
 		}
 	}
 

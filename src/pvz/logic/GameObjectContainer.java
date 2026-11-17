@@ -2,7 +2,6 @@ package pvz.logic;
 
 import java.util.List;
 import pvz.logic.gameobjects.GameObject;
-import pvz.logic.gameobjects.GameItem;
 import utils.Position;
 import java.util.ArrayList;
 
@@ -30,15 +29,7 @@ public class GameObjectContainer {
 		return false;
 	}
 
-	public GameItem getGameItemInPos(Position pos) {
-		for (GameObject obj : gameObjects) {
-			if (obj.isInPosition(pos) && obj.fillsPos() && obj.isAlive())
-				return obj;
-		}
-		return null;
-	}
-
-	public String getIconInPosition(Position pos) {
+	public String positionToString(Position pos) {
 		StringBuilder icon = new StringBuilder();
 		boolean sunDrawn = false;
 		for (GameObject obj : gameObjects) {
@@ -79,5 +70,29 @@ public class GameObjectContainer {
 			}
 		}
 		return caught;
+	}
+
+	public boolean anyInColumn(int column) {
+		for (GameObject obj : gameObjects) {
+			if (obj.isAlive() && obj.isInColumn(column))
+				return true;
+		}
+		return false;
+	}
+
+	public boolean plantAttack(Position pos, int damage) {
+		for (GameObject obj : gameObjects) {
+			if (obj.isInPosition(pos) && obj.receivePlantAttack(damage))
+				return true;
+		}
+		return false;
+	}
+	
+	public boolean zombieAttack(Position pos, int damage) {
+		for (GameObject obj : gameObjects) {
+			if (obj.isInPosition(pos) && obj.receiveZombieAttack(damage))
+				return true;
+		}
+		return false;
 	}
 }

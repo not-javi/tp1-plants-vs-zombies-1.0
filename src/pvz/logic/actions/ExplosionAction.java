@@ -18,26 +18,23 @@ public class ExplosionAction implements GameAction {
 		this.positions = positions;
 		this.isPlant = isPlant;
 	}
-	
+
 	public static ExplosionAction plantExplosion(int damage, List<Position> positions) {
-		return new ExplosionAction(damage,true,positions);
+		return new ExplosionAction(damage, true, positions);
 	}
-	
+
 	public static ExplosionAction zombieExplosion(int damage, List<Position> positions) {
-		return new ExplosionAction(damage,false,positions);
+		return new ExplosionAction(damage, false, positions);
 	}
 
 	public void execute(GameWorld game) {
-		GameItem item;
 		if (isPlant) {
 			for (Position pos : positions) {
-				item = game.getGameItemInPos(pos);
-				if (item != null) item.receivePlantAttack(damage);
+				game.plantAttack(pos, damage);
 			}
 		} else {
 			for (Position pos : positions) {
-				item = game.getGameItemInPos(pos);
-				if (item != null) item.receiveZombieAttack(damage);
+				game.zombieAttack(pos, damage);
 			}
 		}
 	}

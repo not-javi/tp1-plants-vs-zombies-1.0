@@ -1,17 +1,30 @@
 package pvz.logic;
+
 import utils.Position;
 import pvz.control.Level;
 
 public interface GameModel {
 	void reset(Level level, long seed);
+
 	void reset();
+
 	void update();
+
 	void quit();
-	
+
 	String getPlantsList();
-	int addPlant(String plantName, Position pos);
-	int addCheatPlant(String plantName, Position pos);
-	int addZombie(String zombieName, Position pos);
+
 	String getZombiesList();
-	int catchCommand(Position pos);
+
+	boolean addGameObject(String name, Position pos);
+
+	boolean addGameObjectForFree(String name, Position pos);
+
+	boolean catchObject(Position pos);
+
+	boolean isValidPosition(Position pos);
+
+	boolean isInsideBoard(Position pos);
+
+	boolean isSunAlreadyCaught();
 }

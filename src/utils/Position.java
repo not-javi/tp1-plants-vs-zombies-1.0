@@ -3,6 +3,7 @@ package utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class Position {
 
@@ -52,6 +53,11 @@ public class Position {
 	}
 
 	@Override
+	public int hashCode() {
+		return Objects.hash(Integer.valueOf(col), Integer.valueOf(row));
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -62,6 +68,8 @@ public class Position {
 		Position other = (Position) obj;
 		return col == other.col && row == other.row;
 	}
+	
+	
 
 	public String positionToString() {
 		return "(" + this.col + ", " + this.row + ")";
@@ -79,5 +87,13 @@ public class Position {
 		List<Position> aux = new ArrayList<>(Arrays.asList(this.up(), this.down(), this.left(),
 				this.right(), this.upLeft(), this.upRight(), this.downLeft(), this.downRight()));
 		return aux;
+	}
+	
+	public int column() {
+		return col;
+	}
+	
+	public int row() {
+		return row;
 	}
 }

@@ -48,4 +48,14 @@ public class Sun extends GameObject {
 		}
 		return false;
 	}
+	
+	@Override 
+	public int getDamage() {
+		return 0;
+	}
+	
+	@Override
+	public boolean canBeSpawnedAt(Position pos) {
+		return game.isInsideBoard(pos);
+	}
 }
